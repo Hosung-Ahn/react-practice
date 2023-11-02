@@ -1,5 +1,6 @@
 import "./ExpenseItem.css";
 import ExpenseDate from "./ExpenseDate";
+import Card from "./Card";
 
 function ExpenseInfo(props) {
   return <div className="expense-item__description">
@@ -9,9 +10,9 @@ function ExpenseInfo(props) {
 }
 
 function ExpenseItem(props) {
-  const expenseDate = new Date(2021, 2, 28)
-  const expenseTitle = "Car insurance"
-  const expenseAmount = 294.12
+  const expenseDate = props.date;
+  const expenseTitle = props.title;
+  const expenseAmount = props.amount;
 
   return (
       <div className="expense-item">
