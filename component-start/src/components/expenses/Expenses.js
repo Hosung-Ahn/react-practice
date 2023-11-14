@@ -4,6 +4,9 @@ import ExpenseItem from './ExpenseItem';
 import Card from '../ui/Card';
 import './Expenses.css';
 import ExpensesFilter from "./ExpensesFilter";
+import ExpenseList from "./ExpenseList";
+import Chart from "../Chart/Chart";
+import ExpenseChart from "./ExpenseChart";
 
 function Expenses(props) {
   const [selectedYear, setSelectedYear] = useState("2019");
@@ -29,18 +32,19 @@ function Expenses(props) {
 
   return (
       <Card className="expenses">
+        <ExpenseChart expenses={selectedExpenses}/>
         <ExpensesFilter selected={selectedYear} onFilterChange={filterChangeHandler}/>
         {/*<p>Data for years {filterInfoText} is hidden.</p>*/}
-
-        {selectedExpenses.map(expense => (
-            <ExpenseItem
-                key={expense.id}
-                title={expense.title}
-                amount={expense.amount}
-                date={expense.date}
-            />
-        ))}
-
+        {/*{selectedExpenses.length === 0 && <p>No expenses found.</p>}*/}
+        {/*{selectedExpenses.map(expense => (*/}
+        {/*    <ExpenseItem*/}
+        {/*        key={expense.id}*/}
+        {/*        title={expense.title}*/}
+        {/*        amount={expense.amount}*/}
+        {/*        date={expense.date}*/}
+        {/*    />*/}
+        {/*))}*/}
+        <ExpenseList items={selectedExpenses}/>
       </Card>
 
   );
