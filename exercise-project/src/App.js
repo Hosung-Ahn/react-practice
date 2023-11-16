@@ -1,11 +1,21 @@
 import logo from './assets/investment-calculator-logo.png';
+import Header from "./component/Header/Header";
+import InvestInput from "./component/InvestInput/InvestInput";
+import InvestResult from "./component/InvestResult/InvestResult";
+import {useState} from "react";
 
 function App() {
-  const calculateHandler = (userInput) => {
-    // Should be triggered when form is submitted
-    // You might not directly want to bind it to the submit event on the form though...
+  const [dataCalculated, setDataCalculated] = useState([]);
+  const [showTable, setShowTable] = useState(false);
 
-    const yearlyData = []; // per-year results
+  function formatNumber(num) {
+    return num.toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+  }
+
+  const calculateHandler = (userInput) => {
+    setShowTable(true)
+
+    const yearlyData = []
 
     let currentSavings = +userInput['current-savings']; // feel free to change the shape of this input object!
     const yearlyContribution = +userInput['yearly-contribution']; // as mentioned: feel free to change the shape...
@@ -17,7 +27,6 @@ function App() {
       const yearlyInterest = currentSavings * expectedReturn;
       currentSavings += yearlyInterest + yearlyContribution;
       yearlyData.push({
-        // feel free to change the shape of the data pushed to the array!
         year: i + 1,
         yearlyInterest: yearlyInterest,
         savingsEndOfYear: currentSavings,
@@ -25,72 +34,40 @@ function App() {
       });
     }
 
-    // do something with yearlyData ...
+    console.log(yearlyData)
+
+    let resultData = []
+    let TotalInterest = 0;
+    for (let data of yearlyData) {
+      TotalInterest += data.yearlyInterest;
+      resultData.push({
+        year : data.year,
+        totalSavings : formatNumber(data.savingsEndOfYear),
+        interest : formatNumber(data.yearlyInterest),
+        totalInterest : formatNumber(TotalInterest),
+        investedCapital :formatNumber(data.savingsEndOfYear - TotalInterest)
+      })
+    }
+
+    setDataCalculated(resultData)
   };
+
+  const resetHandler = () => {
+    setShowTable(false)
+  }
+
+  const resultContent = showTable ? <InvestResult items={dataCalculated}/> : <p style={{ textAlign: 'center' }}>No goals found. Maybe add one?</p>
 
   return (
     <div>
-      <header className="header">
-        <img src={logo} alt="logo" />
-        <h1>Investment Calculator</h1>
-      </header>
+      <Header/>
 
-      <form className="form">
-        <div className="input-group">
-          <p>
-            <label htmlFor="current-savings">Current Savings ($)</label>
-            <input type="number" id="current-savings" />
-          </p>
-          <p>
-            <label htmlFor="yearly-contribution">Yearly Savings ($)</label>
-            <input type="number" id="yearly-contribution" />
-          </p>
-        </div>
-        <div className="input-group">
-          <p>
-            <label htmlFor="expected-return">
-              Expected Interest (%, per year)
-            </label>
-            <input type="number" id="expected-return" />
-          </p>
-          <p>
-            <label htmlFor="duration">Investment Duration (years)</label>
-            <input type="number" id="duration" />
-          </p>
-        </div>
-        <p className="actions">
-          <button type="reset" className="buttonAlt">
-            Reset
-          </button>
-          <button type="submit" className="button">
-            Calculate
-          </button>
-        </p>
-      </form>
+      <InvestInput calulateHandler={calculateHandler} resetHandler={resetHandler}/>
 
       {/* Todo: Show below table conditionally (only once result data is available) */}
       {/* Show fallback text if no data is available */}
 
-      <table className="result">
-        <thead>
-          <tr>
-            <th>Year</th>
-            <th>Total Savings</th>
-            <th>Interest (Year)</th>
-            <th>Total Interest</th>
-            <th>Invested Capital</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr>
-            <td>YEAR NUMBER</td>
-            <td>TOTAL SAVINGS END OF YEAR</td>
-            <td>INTEREST GAINED IN YEAR</td>
-            <td>TOTAL INTEREST GAINED</td>
-            <td>TOTAL INVESTED CAPITAL</td>
-          </tr>
-        </tbody>
-      </table>
+      {resultContent}
     </div>
   );
 }
