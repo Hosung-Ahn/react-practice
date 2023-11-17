@@ -1,23 +1,38 @@
-import logo from './logo.svg';
-import './App.css';
+import AddUser from "./components/AddUser";
+import Card from "./components/Card";
+import UsersList from "./components/UsersList";
+import {useState} from "react";
+import ErrorModal from "./components/ErrorModal";
 
 function App() {
+
+  const [users, setUsers] = useState([]);
+  const [error, setError] = useState("");
+
+  const addUserHandler = (enteredValue) => {
+    setUsers(prevUsers => {
+      return [...prevUsers, {name: enteredValue.name, age: enteredValue.age, id: Math.random().toString()}]
+    })
+  }
+
+  const onConfirmHandler = () => {
+    setError("");
+  }
+
+  const onInvalidInputHandler = (message) => {
+    setError(message);
+  }
+
+  console.log(users);
+  const usersListContent = users.length > 0 ? <Card><UsersList users={users}/></Card> : null;
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div>
+      <Card>
+        <AddUser onAddUser={addUserHandler} onInvalidInput={onInvalidInputHandler}/>
+      </Card>
+      {usersListContent}
+      {error && <ErrorModal title={"Invalid Input"} message={error} onConfirm={onConfirmHandler} /> }
     </div>
   );
 }

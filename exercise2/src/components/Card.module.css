@@ -1,0 +1,11 @@
+/* Card.module.css */
+
+.card {
+    background-color: white; /* 배경색 설정 */
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.25); /* 그림자 효과 */
+    border-radius: 10px; /* 모서리 둥글게 */
+    margin: 20px auto; /* 상하 여백 20px, 좌우 자동으로 중앙 정렬 */
+    padding: 1rem; /* 내부 패딩 */
+    max-width: 600px; /* 최대 너비 설정 */
+    width: 90%; /* 너비를 화면의 90%로 설정 */
+}
