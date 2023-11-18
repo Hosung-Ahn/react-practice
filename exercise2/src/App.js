@@ -22,8 +22,6 @@ function App() {
   const onInvalidInputHandler = (message) => {
     setError(message);
   }
-
-  console.log(users);
   const usersListContent = users.length > 0 ? <Card><UsersList users={users}/></Card> : null;
 
   return (
