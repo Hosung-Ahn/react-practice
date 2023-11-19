@@ -91,15 +91,27 @@ const Login = (props) => {
   };
 
   const ctx = useContext(AuthContext);
+
+  const emailInputRef = React.useRef();
+  const passwordInputRef = React.useRef();
+
   const submitHandler = (event) => {
     event.preventDefault();
-    ctx.onLogin(emailState.value, passwordState.value);
+    if (formIsValid) {
+      ctx.onLogin(emailState.value, passwordState.value);
+    } else if (!emailIsValid) {
+      emailInputRef.current.focus();
+    } else {
+      passwordInputRef.current.focus();
+    }
+
   };
 
   return (
       <Card className={classes.login}>
         <form onSubmit={submitHandler}>
           <Input
+              ref={emailInputRef}
               type="email"
               id="email"
               label="E-Mail"
@@ -109,6 +121,7 @@ const Login = (props) => {
               onBlur={validateEmailHandler}
           />
           <Input
+              ref={passwordInputRef}
               type="password"
               id="password"
               label="Password"
@@ -118,7 +131,7 @@ const Login = (props) => {
               onBlur={validatePasswordHandler}
           />
           <div className={classes.actions}>
-            <Button type="submit" disabled={!formIsValid}>
+            <Button type="submit" >
               Login
             </Button>
           </div>
